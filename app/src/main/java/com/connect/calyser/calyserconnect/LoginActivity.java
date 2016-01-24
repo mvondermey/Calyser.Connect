@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-        mDbHandler = new DBHandler(getApplicationContext(), null, mPasswordAuthentication);
+        mDbHandler = new DBHandler(getApplicationContext(), null, DBHandler.DATABASE_NAME, DBHandler.DATABASE_VERSION, mPasswordAuthentication);
         //
         Log.d("Calyser.Connect","OnCreate");
         //
@@ -456,15 +456,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
-
+//
         private final String mEmail;
         private final String mPassword;
-
+//
         UserLoginTask() {
             mEmail = mPasswordAuthentication.getUserName();
             mPassword = mPasswordAuthentication.getUserName();
         }
-
         //
         @Override
         protected Integer doInBackground(Void... params) {
