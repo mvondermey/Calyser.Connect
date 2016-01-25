@@ -22,6 +22,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import credentials.DATADBHandler;
+
 
 public class FileListActivity extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class FileListActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private DATADBHandler mDbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +40,21 @@ public class FileListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_file_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//
-        String[] values = new String[]{"Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2", "Android1", "Android2"};
+        //
+        mDbHandler = new DATADBHandler(getApplicationContext(), null, DATADBHandler.DATA_DATABASE_NAME, DATADBHandler.DATA_DATABASE_VERSION);
+        //
+        String[] values = GetFileNames();
+        //
+        //String[] values = new String[]{"Android", "iPhone", "WindowsMobile",
+        //        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+        //        "Linux", "OS/2", "Android1", "Android2"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, values);
+        //
         final ListView mListView = (ListView) findViewById(R.id.filelist);
         mListView.setAdapter(adapter);
         //
-
+        //
         // Item Click Listener for the listview
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
             @Override
@@ -74,8 +82,6 @@ public class FileListActivity extends AppCompatActivity {
         //
         //Adding ports 5000 and 5001
         //
-
-        //
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -99,6 +105,10 @@ public class FileListActivity extends AppCompatActivity {
                 Uri.parse("android-app://com.connect.calyser.calyserconnect/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+        //
+
+
+        //
     }
 
     @Override
@@ -120,4 +130,16 @@ public class FileListActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
+    public String[] GetFileNames(){
+        //
+        String[] values = new String[]{"Test","Martin"};
+        //
+        System.out.println("DBHandler "+mDbHandler);
+        //
+        values = mDbHandler.GetDBFileNames();
+        //
+        return values;
+    }
+
 }

@@ -26,22 +26,15 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final int WrongPassword = 1;
     public static final int PasswordCorrect = 2;
     //
-    // DB Data
-    //
-    private static final int DATA_DATABASE_VERSION = 1;
-    private static final String DATA_DATABASE_NAME = "data.db";
-    private static final String TABLE_DATA = "UserData";
-    //
-    public static final String DATA_COLUMN_ID = "_id";
-    public static final String DATA_COLUMN_USERNAME = "from";
-    public static final String DATA_COLUMN_PASSSWORD = "to";
-    //
 
     //
     public DBHandler(Context context,
                      SQLiteDatabase.CursorFactory factory, String DBName, Integer DBVersion, PasswordAuthentication mPasswordAuthentication) {
         super(context, DBName, factory, DBVersion);
     }
+    //
+
+
     //
     @Override
     public void onCreate(SQLiteDatabase db) {
