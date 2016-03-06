@@ -45,16 +45,18 @@ public class FileListActivity extends AppCompatActivity {
         //
         String[] values = GetFileNames();
         //
+
         //String[] values = new String[]{"Android", "iPhone", "WindowsMobile",
         //        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
         //        "Linux", "OS/2", "Android1", "Android2"};
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, values);
         //
+
         final ListView mListView = (ListView) findViewById(R.id.filelist);
         mListView.setAdapter(adapter);
-        //
-        //
+
         // Item Click Listener for the listview
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
             @Override
@@ -70,8 +72,10 @@ public class FileListActivity extends AppCompatActivity {
         //
         // Setting the item click listener for the listview
         mListView.setOnItemClickListener(itemClickListener);
+
 //
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_files);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +141,7 @@ public class FileListActivity extends AppCompatActivity {
         //
         System.out.println("DBHandler "+mDbHandler);
         //
-        values = mDbHandler.GetDBFileNames();
+        //values = mDbHandler.GetDBFileNames();
         //
         return values;
     }

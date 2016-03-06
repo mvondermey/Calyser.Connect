@@ -9,9 +9,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.connect.calyser.calyserconnect.FileListActivity"
-    tools:showIn="@layout/activity_file_list">
-    <ListView android:id="@+id/filelist"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    tools:context="com.connect.calyser.calyserconnect.Logging"
+    tools:showIn="@layout/activity_logging">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logging of my APP"
+        android:id="@+id/logging_text"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

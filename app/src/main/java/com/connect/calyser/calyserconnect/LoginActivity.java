@@ -104,7 +104,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //
         Log.d("Calyser.Connect","OnCreate");
         //
+        CalyserFileWriter cFileWriter = new CalyserFileWriter().GetFileWriter(this.getApplicationContext());
+        //
         mPasswordView = (EditText) findViewById(R.id.password);
+        System.out.println("mPasswordView "+mPasswordView);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -133,10 +136,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         SIngletonCalyser.addPort(5000);
         SIngletonCalyser.addPort(5001);
         //
-        mServer = new Server();
-        mServer.startServer(this);
-        //mClient = new Client();
-        //mClient.startClient(this);
+        //mServer = new Server();
+        //mServer.startServer(this);
+        //
+        mClient = new Client();
+        mClient.startClient(this);
+        //
         //mDiscovery = new Discovery();
         //mDiscovery.SayHi(this);
         //
@@ -389,7 +394,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //
         alertDialog.setMessage(mDialog);
         alertDialog.show();
-        */
+
         try {
             InetAddress IP = InetAddress.getLocalHost();
             System.out.println("IP of my system is := " + IP.getHostAddress());
@@ -397,7 +402,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             System.err.println("Unable to get Hostaddress");
             e.printStackTrace();
         }
-        //
+        */
     }
 
     @Override
@@ -492,7 +497,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success == DBHandler.PasswordCorrect) {
                 //finish();
-                Intent intent = new Intent(LoginActivity.this, FileListActivity.class);
+                Intent intent = new Intent(LoginActivity.this, Logging.class);
                 //
                 startActivity(intent);
             } else if ( success == DBHandler.WrongPassword ){

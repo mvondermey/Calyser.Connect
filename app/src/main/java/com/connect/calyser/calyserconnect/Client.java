@@ -2,12 +2,15 @@ package com.connect.calyser.calyserconnect;
 
 import android.content.Context;
 import android.os.StrictMode;
+import android.provider.Settings;
+import android.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -22,41 +25,63 @@ public class Client {
     //
     public void startClient(final Context mContext) {
         //
-        final ArrayList mListPorts =  SIngletonCalyser.getPorts();
+        final ArrayList mListConnections =  SIngletonCalyser.getConnections();
         //
         final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
+        System.out.println("Client.StartClient");
         //
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         //
-        //
         Runnable clientTask = new Runnable() {
             @Override
             public void run() {
-
-//
-                System.out.println("Connecting to clients");
-                Iterator itr = mListPorts.iterator();
-                Socket clientSocket;
-                while (itr.hasNext()) {
-                    int port = (int) itr.next();
-                    System.out.println("Connecting to port " + port);
-                    try {
-                        clientSocket = new Socket("10.0.2.2", port);
-                        clientProcessingPool.submit(new ClientTask(clientSocket));
-                    } catch (IOException e) {
-                        System.out.println("Unable to process client request");
-                        e.printStackTrace();
+                //
+                CalyserFileWriter cFileWriter = null;
+                cFileWriter = new CalyserFileWriter().GetFileWriter(mContext);
+                cFileWriter.writeToFile("Client.StartClient\n");
+                System.out.println("Client.StartClient.run");
+                //
+                while (true) {
+                    //
+                    //System.out.println("Connecting to clients");
+                    Iterator itr = mListConnections.iterator();
+                    Socket clientSocket;
+                    while (itr.hasNext()) {
+                        Pair<String, Integer> connection = (Pair<String, Integer>) itr.next();
+                        //
+                        String ip = connection.first;
+                        int port = connection.second;
+                        //
+                        System.out.println("Calyser.Connect Connecting to IP   " + ip);
+                        System.out.println("Calyser.Connect Connecting to port " + port);
+                        //
+                        cFileWriter.writeToFile("Calyser.Connect Connecting to IP   " + ip);
+                        cFileWriter.writeToFile("Calyser.Connect Connecting to port " + port);
+                        //
+                        try {
+                            clientSocket = new Socket(ip, port);
+                            clientSocket.connect(new InetSocketAddress(ip, port), 1000);
+                            clientProcessingPool.submit(new ClientTask(clientSocket));
+                        } catch (IOException e) {
+                            System.out.println("Unable to process client request");
+                            e.printStackTrace();
+                        }
                     }
-                }
 
+                }
             }
         };
-        Thread clientThread = new Thread(clientTask);
-        clientThread.start();
-
+        //
+        //while(true) {
+            //
+            Thread clientThread = new Thread(clientTask);
+            clientThread.start();
+            //
+        //}
+        //
     }
-
+//
     private class ClientTask implements Runnable {
         private final Socket clientSocket;
 

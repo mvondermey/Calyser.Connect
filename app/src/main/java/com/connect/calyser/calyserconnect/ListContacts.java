@@ -73,7 +73,7 @@ public boolean onCreateOptionsMenu(Menu menu) {
         // Setting the item click listener for the listview
         mListView.setOnItemClickListener(itemClickListener);
         //
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_contacts);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
