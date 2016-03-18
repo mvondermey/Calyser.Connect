@@ -3,6 +3,8 @@ package com.connect.calyser.calyserconnect;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by martin on 21.01.2016.
@@ -22,6 +24,8 @@ public class SIngletonCalyser {
     private SIngletonCalyser() {
         //empty
     }
+
+    final static ExecutorService SocketProcessingPool = Executors.newFixedThreadPool(10);
 
     public static ArrayList getPorts() {
         return mSListPorts;

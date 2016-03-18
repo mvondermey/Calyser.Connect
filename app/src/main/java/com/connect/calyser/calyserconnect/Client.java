@@ -1,18 +1,29 @@
 package com.connect.calyser.calyserconnect;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.StrictMode;
 import android.provider.Settings;
+import android.util.Log;
 import android.util.Pair;
+import android.widget.TextView;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
@@ -26,8 +37,9 @@ public class Client {
     public void startClient(final Context mContext) {
         //
         final ArrayList mListConnections =  SIngletonCalyser.getConnections();
+        final WebSocketClient[] mWebSocketClient = {null};
         //
-        final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
+
         System.out.println("Client.StartClient");
         //
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -39,86 +51,106 @@ public class Client {
                 //
                 CalyserFileWriter cFileWriter = null;
                 cFileWriter = new CalyserFileWriter().GetFileWriter(mContext);
-                cFileWriter.writeToFile("Client.StartClient\n");
-                System.out.println("Client.StartClient.run");
+                cFileWriter.writeToFile("Calyser.Client.StartClient\n");
+                System.out.println("Calyser.Client.StartClient.run");
                 //
-                while (true) {
+                //while (true) {
                     //
                     //System.out.println("Connecting to clients");
+                    //
                     Iterator itr = mListConnections.iterator();
-                    Socket clientSocket;
+                    SocketChannel clientSocket = null;
+                    //
                     while (itr.hasNext()) {
                         Pair<String, Integer> connection = (Pair<String, Integer>) itr.next();
                         //
                         String ip = connection.first;
                         int port = connection.second;
                         //
-                        System.out.println("Calyser.Connect Connecting to IP   " + ip);
-                        System.out.println("Calyser.Connect Connecting to port " + port);
+                        System.out.println("Calyser.Client.Connect Connecting to IP   " + ip);
+                        System.out.println("Calyser.Client.Connect Connecting to port " + port);
                         //
-                        cFileWriter.writeToFile("Calyser.Connect Connecting to IP   " + ip);
-                        cFileWriter.writeToFile("Calyser.Connect Connecting to port " + port);
+                        cFileWriter.writeToFile("Calyser.Client.Connect Connecting to IP   " + ip);
+                        cFileWriter.writeToFile("Calyser.Client.Connect Connecting to port " + port);
+                        //
+                        URI uri;
+                        try {
+                            //
+                            uri = new URI("ws://echo.websocket.org:8080");
+                            System.out.println("Calyser.Client.Connected to Websocket Server");
+                            //
+                            mWebSocketClient[0] = new WebSocketClient(uri) {
+                                @Override
+                                public void onOpen(ServerHandshake serverHandshake) {
+                                    System.out.println("Calyser.Client.Websocket Opened");
+                                    mWebSocketClient[0].send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
+                                }
+
+                                @Override
+                                public void onMessage(String s) {
+                                    final String message = s;
+                                    SIngletonCalyser.SocketProcessingPool.submit(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //
+                                            System.out.println("Calyser.Client.Got message "+message);
+                                            //
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onClose(int i, String s, boolean b) {
+                                    System.out.println("Calyser.Client.Websocket Closed " + s);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    System.out.println("Calyser.Client.Websocket Error " + e.getMessage());
+                                }
+                            };
+                            System.out.println("Calyser.Client.Websocket Connect");
+                            mWebSocketClient[0].connect();
+                            //
+                        }catch(URISyntaxException e){
+                            //
+                            System.out.println("Calyser.Client.Unable to connect to Websocket Server");
+                            e.printStackTrace();
+                            //
+                        }
                         //
                         try {
-                            clientSocket = new Socket(ip, port);
-                            clientSocket.connect(new InetSocketAddress(ip, port), 1000);
-                            clientProcessingPool.submit(new ClientTask(clientSocket));
-                        } catch (IOException e) {
-                            System.out.println("Unable to process client request");
+                            //
+                            System.out.println("Calyser.Client.Create Socket");
+                            //clientSocket = new Socket(ip, port);
+                            clientSocket = SocketChannel.open();
+                            clientSocket.configureBlocking(false);
+                           //
+                            clientSocket.connect(new InetSocketAddress(ip, port));
+                            while(! clientSocket.finishConnect() ){
+                                //wait, or do something else...
+                            }
+                            //
+                            System.out.println("Calyser.Client.Submit pool");
+                            //
+                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket));
+                            //
+                        } catch (IOException e ) {
+                            System.out.println("Calyser.Client.Unable to open socket "+ip+" "+port);
                             e.printStackTrace();
                         }
                     }
 
                 }
-            }
+            //}
         };
         //
-        //while(true) {
+        Thread clientThread = new Thread(clientTask);
+        clientThread.start();
             //
-            Thread clientThread = new Thread(clientTask);
-            clientThread.start();
-            //
-        //}
-        //
     }
 //
-    private class ClientTask implements Runnable {
-        private final Socket clientSocket;
 
-        private ClientTask(Socket clientSocket) {
-            this.clientSocket = clientSocket;
-        }
-
-        @Override
-        public void run() {
-
-            BufferedReader in;
-            PrintWriter out;
-
-            System.out.println("Got a Connection !");
-
-            // Do whatever required to process the client's request
-            // Create character streams for the socket.
-            //
-            //
-            try {
-                in = new BufferedReader(new InputStreamReader(
-                        clientSocket.getInputStream()));
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-                System.out.print(in.readLine());
-                System.out.print("Sending message");
-                out.print("I am here *************** !!!");
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-            //
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     //
 }

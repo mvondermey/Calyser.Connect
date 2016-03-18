@@ -84,4 +84,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_logging">Logging</string>
+    <string name="title_activity_logo">Logo</string>
 </resources>

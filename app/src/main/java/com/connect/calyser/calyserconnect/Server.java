@@ -19,11 +19,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,7 +43,6 @@ public class Server extends AppCompatActivity {
 
     //
     public void startServer(final Context mContext) {
-        final ExecutorService clientProcessingPool = Executors.newFixedThreadPool(10);
         //
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -51,21 +53,23 @@ public class Server extends AppCompatActivity {
 
                 CalyserFileWriter cFilewriter = null;
 
-                    cFilewriter = new CalyserFileWriter().GetFileWriter(mContext);
-
+                cFilewriter = new CalyserFileWriter().GetFileWriter(mContext);
 
                 try {
-                    ServerSocket serverSocket = new ServerSocket(8001);
+                    //
+                    ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+                    serverSocketChannel.socket().bind(new InetSocketAddress(8002));
+                    serverSocketChannel.configureBlocking(false);
                     //
                     System.out.println("Waiting for clients to connect...");
                     cFilewriter.writeToFile("Waiting for clients to connect...");
                     //
                     while (true) {
-                        System.out.println("Before accept...");
-                        Socket clientSocket = serverSocket.accept();
-                        System.out.println("After accept...");
                         //
-                        clientProcessingPool.submit(new ClientTask(clientSocket));
+                        SocketChannel clientSocket = serverSocketChannel.accept();
+                        //
+                        if (clientSocket != null)
+                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket));
                         //
                     }
                 } catch (IOException e) {
@@ -77,7 +81,7 @@ public class Server extends AppCompatActivity {
         //
         Thread serverThread = new Thread(serverTask);
         serverThread.start();
-
+        //
     }
 
     @Override
@@ -128,43 +132,5 @@ public class Server extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-
-    //
-    private class ClientTask implements Runnable {
-        private final Socket clientSocket;
-
-        private ClientTask(Socket clientSocket) {
-            this.clientSocket = clientSocket;
-        }
-
-        @Override
-        public void run() {
-
-            BufferedReader in;
-            PrintWriter out;
-
-            System.out.println("Got a client !");
-
-            // Do whatever required to process the client's request
-            // Create character streams for the socket.
-            //
-            try {
-                System.out.println("Reading buffer !");
-                in = new BufferedReader(new InputStreamReader(
-                        clientSocket.getInputStream()));
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
-                System.out.print(in.readLine());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //
-        }
-    }
-
 }
+

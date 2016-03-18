@@ -82,9 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private DBHandler mDbHandler;
     private PasswordAuthentication mPasswordAuthentication;
-    private Server mServer;
-    private Client mClient;
-    private Discovery mDiscovery;
+
     private Dialog mDialog;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -133,17 +131,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         //
-        SIngletonCalyser.addPort(5000);
-        SIngletonCalyser.addPort(5001);
-        //
-        //mServer = new Server();
-        //mServer.startServer(this);
-        //
-        mClient = new Client();
-        mClient.startClient(this);
-        //
-        //mDiscovery = new Discovery();
-        //mDiscovery.SayHi(this);
+
         //
 
     }
