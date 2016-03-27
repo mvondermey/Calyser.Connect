@@ -73,52 +73,6 @@ public class Client {
                         cFileWriter.writeToFile("Calyser.Client.Connect Connecting to IP   " + ip);
                         cFileWriter.writeToFile("Calyser.Client.Connect Connecting to port " + port);
                         //
-                        URI uri;
-                        try {
-                            //
-                            uri = new URI("ws://echo.websocket.org:8080");
-                            System.out.println("Calyser.Client.Connected to Websocket Server");
-                            //
-                            mWebSocketClient[0] = new WebSocketClient(uri) {
-                                @Override
-                                public void onOpen(ServerHandshake serverHandshake) {
-                                    System.out.println("Calyser.Client.Websocket Opened");
-                                    mWebSocketClient[0].send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
-                                }
-
-                                @Override
-                                public void onMessage(String s) {
-                                    final String message = s;
-                                    SIngletonCalyser.SocketProcessingPool.submit(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            //
-                                            System.out.println("Calyser.Client.Got message "+message);
-                                            //
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onClose(int i, String s, boolean b) {
-                                    System.out.println("Calyser.Client.Websocket Closed " + s);
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    System.out.println("Calyser.Client.Websocket Error " + e.getMessage());
-                                }
-                            };
-                            System.out.println("Calyser.Client.Websocket Connect");
-                            mWebSocketClient[0].connect();
-                            //
-                        }catch(URISyntaxException e){
-                            //
-                            System.out.println("Calyser.Client.Unable to connect to Websocket Server");
-                            e.printStackTrace();
-                            //
-                        }
-                        //
                         try {
                             //
                             System.out.println("Calyser.Client.Create Socket");
@@ -133,7 +87,7 @@ public class Client {
                             //
                             System.out.println("Calyser.Client.Submit pool");
                             //
-                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket));
+                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket,mContext));
                             //
                         } catch (IOException e ) {
                             System.out.println("Calyser.Client.Unable to open socket "+ip+" "+port);
@@ -147,7 +101,7 @@ public class Client {
         //
         Thread clientThread = new Thread(clientTask);
         clientThread.start();
-            //
+        //
     }
 //
 

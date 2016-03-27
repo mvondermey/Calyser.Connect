@@ -1,5 +1,10 @@
 package com.connect.calyser.calyserconnect;
 
+import android.content.Context;
+import android.os.Debug;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -8,10 +13,13 @@ import java.nio.channels.SocketChannel;
  * Created by martin on 18.03.2016.
  */
 public class SocketTask implements Runnable {
-    private final SocketChannel clientSocket;
     //
-    public SocketTask(SocketChannel clientSocket) {
-        this.clientSocket = clientSocket;
+    private final SocketChannel clientSocket;
+    private final Context mContext;
+    //
+    public SocketTask(SocketChannel oclientSocket, Context oContext) {
+        this.clientSocket = oclientSocket;
+        this.mContext = oContext;
     }
     //
     private void ReadMessage(){
@@ -19,8 +27,9 @@ public class SocketTask implements Runnable {
         ByteBuffer bufread = ByteBuffer.allocate(1024);
         //
         try {
-            System.out.println("Calyser.ClientTask.Reading data");
+            //System.out.println("Calyser.ClientTask.Reading data");
             while (clientSocket.read(bufread) > 0) {
+                //System.out.println("Calyser.ClientTask.Data received");
                 bufread.flip();
                 int limit = bufread.limit();
                 while (limit > 0) {
@@ -55,14 +64,22 @@ public class SocketTask implements Runnable {
         //
         System.out.println("Calyser.SocketTask.Got connected !");
         //
-        String newData = "I-am-CSync\n";
+        String newData = "I-am-CSync-Android\n";
         //
+        System.out.println("Calyser.SocketTask.Sent 1 "+newData);
         SendMessage(newData);
         //
-        while(true) {
-            SendMessage("Beep");
-            ReadMessage();
-        }
+        MessageJSON myJson = new MessageJSON(mContext);
+        myJson.Message = "Here the JSON";
+        System.out.println("Calyser.SocketTask.Sent 2"+myJson.GetJSON());
+        SendMessage(myJson.GetJSON());
+        //
+        while (true) ReadMessage();
+        //
+        //while(true) {
+         //   SendMessage("Beep");
+           // ReadMessage();
+        //}
 
     }
 }

@@ -69,7 +69,7 @@ public class Server extends AppCompatActivity {
                         SocketChannel clientSocket = serverSocketChannel.accept();
                         //
                         if (clientSocket != null)
-                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket));
+                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket,mContext));
                         //
                     }
                 } catch (IOException e) {
