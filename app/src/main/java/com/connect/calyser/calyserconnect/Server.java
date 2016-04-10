@@ -40,6 +40,7 @@ public class Server extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private int port = 8081;
 
     //
     public void startServer(final Context mContext) {
@@ -58,22 +59,28 @@ public class Server extends AppCompatActivity {
                 try {
                     //
                     ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-                    serverSocketChannel.socket().bind(new InetSocketAddress(8002));
+                    serverSocketChannel.socket().bind(new InetSocketAddress(port));
+
                     serverSocketChannel.configureBlocking(false);
                     //
-                    System.out.println("Waiting for clients to connect...");
-                    cFilewriter.writeToFile("Waiting for clients to connect...");
+                    System.out.println("Calyser.Server.Waiting for clients to connect...port=" + port + " Address=" + (new InetSocketAddress(port)).getAddress());
+                    //cFilewriter.writeToFile("Waiting for clients to connect...");
                     //
                     while (true) {
                         //
                         SocketChannel clientSocket = serverSocketChannel.accept();
                         //
-                        if (clientSocket != null)
-                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket,mContext));
+                        //System.out.println("Calyser.Server.Waiting for clients to connect...");
+                        //
+                        if (clientSocket != null) {
+                            System.out.println("Calyser.Server.Got Connection");
+                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket, mContext));
+                            System.out.println("Calyser.Server.Continue Loop");
+                        }
                         //
                     }
                 } catch (IOException e) {
-                    System.err.println("Unable to process client request");
+                    System.err.println("Calyser.Server.Unable to process client request");
                     e.printStackTrace();
                 }
             }

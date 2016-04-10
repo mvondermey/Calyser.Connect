@@ -76,10 +76,7 @@ public class SocketTask implements Runnable {
         //
         while (true) ReadMessage();
         //
-        //while(true) {
-         //   SendMessage("Beep");
-           // ReadMessage();
-        //}
+
 
     }
 }

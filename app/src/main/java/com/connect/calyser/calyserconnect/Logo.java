@@ -33,9 +33,14 @@ public class Logo extends AppCompatActivity {
         //mServer.startServer(this);
         //
         SIngletonCalyser.addConnections("10.0.2.2",8081);
-        //
+        /*
         mClient = new Client();
         mClient.startClient(this);
+        */
+        //
+        mServer = new Server();
+        mServer.startServer(this);
+        //
         //
         //mDiscovery = new Discovery();
         //mDiscovery.SayHi(this);
