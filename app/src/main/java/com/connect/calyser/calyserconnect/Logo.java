@@ -24,7 +24,7 @@ public class Logo extends AppCompatActivity {
 
         //
         ImageView image = (ImageView) findViewById(R.id.logo);
-        image.setImageResource(R.mipmap.ic_logo);
+        image.setImageResource(R.mipmap.ic_launcher);
         //
         SIngletonCalyser.addPort(5000);
         SIngletonCalyser.addPort(5001);

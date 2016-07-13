@@ -32,6 +32,7 @@ public class SocketTask implements Runnable {
                 //System.out.println("Calyser.ClientTask.Data received");
                 bufread.flip();
                 int limit = bufread.limit();
+                System.out.println("Got ");
                 while (limit > 0) {
                     System.out.print((char) bufread.get());
                     limit--;
@@ -50,13 +51,13 @@ public class SocketTask implements Runnable {
         bufwrite.flip();
         //
         try {
-            System.out.println("Calyser.SocketTask.Sending data");
+            //System.out.println("Calyser.SocketTask.Sending data");
             while (clientSocket.write(bufwrite)>0);
         } catch (IOException e) {
             e.printStackTrace();
         }
         //
-        System.out.println("Calyser.SocketTask.Data sent");
+        //System.out.println("Calyser.SocketTask.Data sent");
     }
     //
     @Override
@@ -65,16 +66,25 @@ public class SocketTask implements Runnable {
         System.out.println("Calyser.SocketTask.Got connected !");
         //
         String newData = "I-am-CSync-Android\n";
-        //
         System.out.println("Calyser.SocketTask.Sent 1 "+newData);
         SendMessage(newData);
+        //
+        ReadMessage();
         //
         MessageJSON myJson = new MessageJSON(mContext);
         myJson.Message = "Here the JSON";
         System.out.println("Calyser.SocketTask.Sent 2"+myJson.GetJSON());
         SendMessage(myJson.GetJSON());
         //
-        while (true) ReadMessage();
+        newData = "I-am-CSync-Android-Always\n";
+        SendMessage(newData);
+        //
+        //
+        while (true) {
+            SendMessage(newData);
+            ReadMessage();
+        }
+
         //
         //while(true) {
          //   SendMessage("Beep");
