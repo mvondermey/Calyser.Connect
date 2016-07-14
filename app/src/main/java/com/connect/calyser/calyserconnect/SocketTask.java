@@ -7,7 +7,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.CharsetDecoder;
 
 /**
  * Created by martin on 18.03.2016.
@@ -26,17 +29,27 @@ public class SocketTask implements Runnable {
         //
         ByteBuffer bufread = ByteBuffer.allocate(1024);
         //
+        bufread.clear();
+        //
         try {
             //System.out.println("Calyser.ClientTask.Reading data");
             while (clientSocket.read(bufread) > 0) {
                 //System.out.println("Calyser.ClientTask.Data received");
                 bufread.flip();
                 int limit = bufread.limit();
-                System.out.println("Got ");
-                while (limit > 0) {
-                    System.out.print((char) bufread.get());
-                    limit--;
-                }
+                System.out.println(" Limit "+limit);
+                //
+                //System.out.println("Got ");
+                //
+                //final byte[] bytes = new byte[bufread.remaining()];
+                //bufread.duplicate().get(bytes);
+                //
+                //System.out.println(new String(bytes));
+                //
+                Charset charset = Charset.forName("ISO-8859-1");
+                CharsetDecoder decoder = charset.newDecoder();
+                CharBuffer charBuffer = decoder.decode(bufread);
+                System.out.print(charBuffer.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,17 +84,13 @@ public class SocketTask implements Runnable {
         //
         ReadMessage();
         //
-        MessageJSON myJson = new MessageJSON(mContext);
-        myJson.Message = "Here the JSON";
+        MessageJSON myJson = new MessageJSON(mContext,"Here is Android");
         System.out.println("Calyser.SocketTask.Sent 2"+myJson.GetJSON());
         SendMessage(myJson.GetJSON());
         //
-        newData = "I-am-CSync-Android-Always\n";
-        SendMessage(newData);
-        //
         //
         while (true) {
-            SendMessage(newData);
+            SendMessage(myJson.GetJSON()+"\n");
             ReadMessage();
         }
 
