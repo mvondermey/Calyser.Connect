@@ -39,13 +39,6 @@ public class SocketTask implements Runnable {
                 int limit = bufread.limit();
                 System.out.println(" Limit "+limit);
                 //
-                //System.out.println("Got ");
-                //
-                //final byte[] bytes = new byte[bufread.remaining()];
-                //bufread.duplicate().get(bytes);
-                //
-                //System.out.println(new String(bytes));
-                //
                 Charset charset = Charset.forName("ISO-8859-1");
                 CharsetDecoder decoder = charset.newDecoder();
                 CharBuffer charBuffer = decoder.decode(bufread);
@@ -70,7 +63,6 @@ public class SocketTask implements Runnable {
             e.printStackTrace();
         }
         //
-        //System.out.println("Calyser.SocketTask.Data sent");
     }
     //
     @Override
@@ -79,15 +71,12 @@ public class SocketTask implements Runnable {
         System.out.println("Calyser.SocketTask.Got connected !");
         //
         String newData = "I-am-CSync-Android\n";
-        System.out.println("Calyser.SocketTask.Sent 1 "+newData);
         SendMessage(newData);
         //
         ReadMessage();
         //
         MessageJSON myJson = new MessageJSON(mContext,"Here is Android");
-        System.out.println("Calyser.SocketTask.Sent 2"+myJson.GetJSON());
         SendMessage(myJson.GetJSON());
-        //
         //
         while (true) {
             SendMessage(myJson.GetJSON()+"\n");
@@ -95,10 +84,7 @@ public class SocketTask implements Runnable {
         }
 
         //
-        //while(true) {
-         //   SendMessage("Beep");
-           // ReadMessage();
-        //}
+
 
     }
 }

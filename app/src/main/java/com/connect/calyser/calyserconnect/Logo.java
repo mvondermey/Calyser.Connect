@@ -1,5 +1,6 @@
 package com.connect.calyser.calyserconnect;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,8 +21,7 @@ public class Logo extends AppCompatActivity {
         setContentView(R.layout.activity_logo);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
+        //
         //
         ImageView image = (ImageView) findViewById(R.id.logo);
         image.setImageResource(R.mipmap.ic_launcher);
@@ -39,6 +39,13 @@ public class Logo extends AppCompatActivity {
         //
         //mDiscovery = new Discovery();
         //mDiscovery.SayHi(this);
+        //
+        // Now start Activity
+        //
+        System.out.println("Start Activity");
+        //
+        Intent myIntent = new Intent(this, PhotoActivity.class);
+        this.startActivity(myIntent);
         //
     }
 
