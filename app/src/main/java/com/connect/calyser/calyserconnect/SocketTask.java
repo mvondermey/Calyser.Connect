@@ -7,7 +7,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.CharsetDecoder;
 
 /**
  * Created by martin on 18.03.2016.
@@ -26,16 +29,20 @@ public class SocketTask implements Runnable {
         //
         ByteBuffer bufread = ByteBuffer.allocate(1024);
         //
+        bufread.clear();
+        //
         try {
             //System.out.println("Calyser.ClientTask.Reading data");
             while (clientSocket.read(bufread) > 0) {
                 //System.out.println("Calyser.ClientTask.Data received");
                 bufread.flip();
                 int limit = bufread.limit();
-                while (limit > 0) {
-                    System.out.print((char) bufread.get());
-                    limit--;
-                }
+                System.out.println(" Limit "+limit);
+                //
+                Charset charset = Charset.forName("ISO-8859-1");
+                CharsetDecoder decoder = charset.newDecoder();
+                CharBuffer charBuffer = decoder.decode(bufread);
+                System.out.print(charBuffer.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,13 +57,12 @@ public class SocketTask implements Runnable {
         bufwrite.flip();
         //
         try {
-            System.out.println("Calyser.SocketTask.Sending data");
+            //System.out.println("Calyser.SocketTask.Sending data");
             while (clientSocket.write(bufwrite)>0);
         } catch (IOException e) {
             e.printStackTrace();
         }
         //
-        System.out.println("Calyser.SocketTask.Data sent");
     }
     //
     @Override
@@ -65,16 +71,18 @@ public class SocketTask implements Runnable {
         System.out.println("Calyser.SocketTask.Got connected !");
         //
         String newData = "I-am-CSync-Android\n";
-        //
-        System.out.println("Calyser.SocketTask.Sent 1 "+newData);
         SendMessage(newData);
         //
-        MessageJSON myJson = new MessageJSON(mContext);
-        myJson.Message = "Here the JSON";
-        System.out.println("Calyser.SocketTask.Sent 2"+myJson.GetJSON());
+        ReadMessage();
+        //
+        MessageJSON myJson = new MessageJSON(mContext,"Here is Android");
         SendMessage(myJson.GetJSON());
         //
-        while (true) ReadMessage();
+        while (true) {
+            SendMessage(myJson.GetJSON()+"\n");
+            ReadMessage();
+        }
+
         //
 
 

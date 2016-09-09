@@ -11,14 +11,15 @@ import org.json.JSONObject;
  */
 public class MessageJSON {
     //
-    public String Message = "Beep";
-    private Context mContext;
+    private String  mMessage;
+    private Context mContext = null;
     //
-    public MessageJSON(Context oContext){
-        this.mContext = oContext;
-    }
+    public MessageJSON(Context oContext, String oMessage){
+        mMessage = oMessage;
+        mContext = oContext;
+    };
     //
-    public String GetJSON(){
+    public String GetJSON ( ) {
         //
         JSONObject jsonObj = new JSONObject();
         //
@@ -29,7 +30,7 @@ public class MessageJSON {
         String AndroidID = android.provider.Settings.Secure.getString(mContext.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
         //
         try {
-            jsonObj.put("Message",Message);
+            jsonObj.put("Message",mMessage);
             jsonObj.put("IMSI",imsi);
             jsonObj.put("IMEI",imei);
             jsonObj.put("ANDROID_ID",AndroidID);
@@ -40,5 +41,12 @@ public class MessageJSON {
         return jsonObj.toString();
         //
     }
-
+    //
+    private String FileListing(){
+        //
+        JSONObject jsonFileListing = new JSONObject();
+        //
+        return jsonFileListing.toString();
+        //
+    }
 }
