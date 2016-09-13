@@ -23,6 +23,7 @@ import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.channels.ServerSocketChannel;
@@ -59,18 +60,22 @@ public class Server extends AppCompatActivity {
                 try {
                     //
                     ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-                    serverSocketChannel.socket().bind(new InetSocketAddress(port));
 
+                    serverSocketChannel.socket().bind(new InetSocketAddress(port));
+                    //
+
+                    //
                     serverSocketChannel.configureBlocking(false);
                     //
-                    System.out.println("Calyser.Server.Waiting for clients to connect...port=" + port + " Address=" + (new InetSocketAddress(port)).getAddress());
+                    System.out.println("Calyser.Server.Waiting for clients to connect...port=" + port + " Address=" + serverSocketChannel.socket().getInetAddress().getCanonicalHostName());
                     //cFilewriter.writeToFile("Waiting for clients to connect...");
                     //
                     while (true) {
                         //
                         SocketChannel clientSocket = serverSocketChannel.accept();
                         //
-                        //System.out.println("Calyser.Server.Waiting for clients to connect...");
+                        Thread.sleep(4000);
+                        System.out.println("Calyser.Server.Waiting for clients to connect...");
                         //
                         if (clientSocket != null) {
                             System.out.println("Calyser.Server.Got Connection");
@@ -81,6 +86,9 @@ public class Server extends AppCompatActivity {
                     }
                 } catch (IOException e) {
                     System.err.println("Calyser.Server.Unable to process client request");
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    System.err.println("Calyser.Server.Issue with Sleep");
                     e.printStackTrace();
                 }
             }
