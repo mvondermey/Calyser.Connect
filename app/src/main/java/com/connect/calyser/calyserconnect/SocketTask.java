@@ -31,6 +31,8 @@ public class SocketTask implements Runnable {
         //
         bufread.clear();
         //
+        String MessageTransmitted = "";
+        //
         try {
             //System.out.println("Calyser.ClientTask.Reading data");
             while (clientSocket.read(bufread) > 0) {
@@ -42,11 +44,21 @@ public class SocketTask implements Runnable {
                 Charset charset = Charset.forName("ISO-8859-1");
                 CharsetDecoder decoder = charset.newDecoder();
                 CharBuffer charBuffer = decoder.decode(bufread);
+                //
+                System.out.print(" -*- ");
                 System.out.print(charBuffer.toString());
+                //
+                MessageTransmitted += charBuffer.toString();
+                //
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //
+        System.out.print("Message = "+MessageTransmitted);
+        //
+        (new MessageParser()).ParseMessage(MessageTransmitted);
+        //
     }
     //
     private void SendMessage(String message){

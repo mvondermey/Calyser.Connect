@@ -29,9 +29,6 @@ public class Logo extends AppCompatActivity {
         SIngletonCalyser.addPort(5000);
         SIngletonCalyser.addPort(5001);
         //
-        //mServer = new Server();
-        //mServer.startServer(this);
-        //
         SIngletonCalyser.addConnections("10.0.2.2",8081);
         /*
         mClient = new Client();

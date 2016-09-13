@@ -75,7 +75,7 @@ public class Server extends AppCompatActivity {
                         SocketChannel clientSocket = serverSocketChannel.accept();
                         //
                         Thread.sleep(4000);
-                        System.out.println("Calyser.Server.Waiting for clients to connect...");
+                        System.out.println("Calyser.Server.Waiting for clients to connect...port=" + port + " Address=" + serverSocketChannel.socket().getInetAddress().getCanonicalHostName());
                         //
                         if (clientSocket != null) {
                             System.out.println("Calyser.Server.Got Connection");
