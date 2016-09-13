@@ -34,6 +34,7 @@ public class MessageParser {
                 for(File myFile : files) {
                     //
                     jsonArray.put(myFile.getName());
+                    //
                     //System.out.println(myFile.getName());
                     //
                 }
