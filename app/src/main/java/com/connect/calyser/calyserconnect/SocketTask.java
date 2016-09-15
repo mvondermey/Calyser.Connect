@@ -83,7 +83,9 @@ public class SocketTask implements Runnable {
         System.out.println("Calyser.SocketTask.Got connected !");
         //
         String newData = "I-am-CSync-Android\n";
+        System.out.println("Message send");
         SendMessage(newData);
+        System.out.println("Message sent");
         //
         ReadMessage();
         //
