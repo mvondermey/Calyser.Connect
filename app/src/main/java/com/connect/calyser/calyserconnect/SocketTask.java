@@ -13,14 +13,15 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import credentials.COMMANDS_DBHandler;
 import credentials.DATADBHandler;
 import credentials.DBHandler;
 
 /**
- * Created by martin on 18.03.2016.
  */
+ // Created by martin on 18.03.2016.
 public class SocketTask implements Runnable {
     //
     private final SocketChannel clientSocket;
@@ -36,66 +37,9 @@ public class SocketTask implements Runnable {
         mCOMMAND_DbHandler = new COMMANDS_DBHandler(oContext);
     }
     //
-    private void ReadMessage(){
-        //
-        ByteBuffer bufread = ByteBuffer.allocate(1024);
-        //
-        bufread.clear();
-        //
-        String MessageReceived = "";
-        //
-        try {
-            System.out.println("Calyser.ClientTask.Reading data");
-            while (clientSocket.read(bufread) > 0) {
-                System.out.println("Calyser.ClientTask.Reading data.bufread");
-                //System.out.println("Calyser.ClientTask.Data received");
-                bufread.flip();
-                int limit = bufread.limit();
-                System.out.println(" Limit "+limit);
-                //
-                Charset charset = Charset.forName("ISO-8859-1");
-                CharsetDecoder decoder = charset.newDecoder();
-                CharBuffer charBuffer = decoder.decode(bufread);
-                //
-                System.out.print(" -*- ");
-                System.out.print(charBuffer.toString());
-                //
-                MessageReceived += charBuffer.toString();
-                //
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //
-        System.out.print("Message Received = "+MessageReceived);
-        //
-        // Store Message in DB
-        //
-        //mCOMMAND_DbHandler.StoreReceived(MessageReceived);
-        //
-        (new MessageParser()).ParseMessage(MessageReceived);
-        //
-    }
+
     //
-    private void SendMessage(String message){
-        //
-        ByteBuffer bufwrite = ByteBuffer.allocate(1024);
-        bufwrite.clear();
-        bufwrite.put(message.getBytes());
-        bufwrite.flip();
-        //
-        try {
-            //System.out.println("Calyser.SocketTask.Sending data");
-            while (clientSocket.write(bufwrite)>0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //
-        // Store Message in DB
-        //
-        //mCOMMAND_DbHandler.StoreSent(message);
-        //
-    }
+
     //
     @Override
     public void run() {
@@ -106,17 +50,16 @@ public class SocketTask implements Runnable {
         //
         String newData = "Calyser.I-am-CSync-Android\n";
         System.out.println("Message send");
-        SendMessage(newData);
+        SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,newData));
         System.out.println("Message sent");
         //
-        ReadMessage();
-        //
         MessageJSON myJson = new MessageJSON(mContext,"Here is Android");
-        SendMessage(myJson.GetJSON());
+        SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
         //
         while (true) {
-            System.out.println("********* Calyser.Sending "+myJson.GetJSON());
-            SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
+            //System.out.println("********* Calyser.Sending "+myJson.GetJSON());
+            //SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
+            //ReadProcessingPool.submit(new ReadMessage(this.clientSocket,this.mContext));
         }
         //
     }

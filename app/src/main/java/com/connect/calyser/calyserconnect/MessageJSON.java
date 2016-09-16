@@ -17,7 +17,8 @@ public class MessageJSON {
     public MessageJSON(Context oContext, String oMessage){
         mMessage = oMessage;
         mContext = oContext;
-    };
+    }
+
     //
     public String GetJSON ( ) {
         //
