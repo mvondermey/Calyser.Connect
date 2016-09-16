@@ -33,9 +33,6 @@ public class DBHandler extends SQLiteOpenHelper {
         super(context, DBName, factory, DBVersion);
     }
     //
-
-
-    //
     @Override
     public void onCreate(SQLiteDatabase db) {
         //

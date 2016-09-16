@@ -12,6 +12,10 @@ import java.nio.charset.Charset;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
 
+import credentials.COMMANDS_DBHandler;
+import credentials.DATADBHandler;
+import credentials.DBHandler;
+
 /**
  * Created by martin on 18.03.2016.
  */
@@ -19,10 +23,12 @@ public class SocketTask implements Runnable {
     //
     private final SocketChannel clientSocket;
     private final Context mContext;
+    private COMMANDS_DBHandler mCOMMAND_DbHandler;
     //
     public SocketTask(SocketChannel oclientSocket, Context oContext) {
         this.clientSocket = oclientSocket;
         this.mContext = oContext;
+        mCOMMAND_DbHandler = new COMMANDS_DBHandler(oContext);
     }
     //
     private void ReadMessage(){
@@ -31,7 +37,7 @@ public class SocketTask implements Runnable {
         //
         bufread.clear();
         //
-        String MessageTransmitted = "";
+        String MessageReceived = "";
         //
         try {
             //System.out.println("Calyser.ClientTask.Reading data");
@@ -48,16 +54,20 @@ public class SocketTask implements Runnable {
                 System.out.print(" -*- ");
                 System.out.print(charBuffer.toString());
                 //
-                MessageTransmitted += charBuffer.toString();
+                MessageReceived += charBuffer.toString();
                 //
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         //
-        System.out.print("Message = "+MessageTransmitted);
+        System.out.print("Message Received = "+MessageReceived);
         //
-        (new MessageParser()).ParseMessage(MessageTransmitted);
+        // Store Message in DB
+        //
+        mCOMMAND_DbHandler.StoreReceived(MessageReceived);
+        //
+        (new MessageParser()).ParseMessage(MessageReceived);
         //
     }
     //
@@ -82,7 +92,7 @@ public class SocketTask implements Runnable {
         //
         System.out.println("Calyser.SocketTask.Got connected !");
         //
-        String newData = "I-am-CSync-Android\n";
+        String newData = "Calyser.I-am-CSync-Android\n";
         System.out.println("Message send");
         SendMessage(newData);
         System.out.println("Message sent");

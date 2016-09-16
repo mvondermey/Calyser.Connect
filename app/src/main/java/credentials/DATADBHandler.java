@@ -1,7 +1,7 @@
 package credentials; /**
  * Created by martin on 15.01.2016.
  */
-
+//
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,9 +13,6 @@ import android.database.sqlite.SQLiteQuery;
 import android.util.Log;
 
 import java.net.PasswordAuthentication;
-
-//
-
 //
 public class DATADBHandler extends SQLiteOpenHelper {
     //
