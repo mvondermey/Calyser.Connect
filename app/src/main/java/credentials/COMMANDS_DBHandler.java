@@ -16,8 +16,8 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
     //
     //DB Username Password
     //
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "commands.db";
+    public static final int DATABASE_VERSION = 3;
+    public static final String DATABASE_NAME = "commands3.db";
     public static final String TABLE_COMMANDS = "Commands";
     //
     public static final String COLUMN_ID = "_id";
@@ -36,16 +36,18 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
                 TABLE_COMMANDS + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                 + COLUMN_COMMANDS_RECEIVED + " TEXT,"
-                + COLUMN_COMMANDS_SENT + " TEXT "
-                + COLUMN_COMMANDS_RECEIVED + "TEXT"
+                + COLUMN_COMMANDS_SENT + " TEXT,"
+                + COLUMN_COMMANDS_RESULT + " TEXT"
                 + ")";
         db.execSQL(CREATE_PRODUCTS_TABLE);
+        System.out.println("Calyser.COMMANDS_DBHandler "+CREATE_PRODUCTS_TABLE);
     }
 //
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion,
                           int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMANDS);
+        System.out.println("Calyser.COMMANDS_DBHandler.onUpgrade");
         onCreate(db);
     }
     //
@@ -56,9 +58,9 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
         mCur.moveToFirst();
         while ( !mCur.isAfterLast()) {
             String received  = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_RECEIVED));
-            String result    = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_RESULT));
-            String sent      = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_SENT));
-            System.out.println(" Received = "+received);
+            String sent    = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_SENT));
+            String result      = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_SENT));
+            System.out.println(" Received= "+received+" result= "+result+ " sent= "+sent);
             mCur.moveToNext();
         }
         db.close();
@@ -67,24 +69,47 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
         //
     }
     //
-    public void StoreReceived(String mReceived) {
+    public void StoreSent(String mSent) {
         //
-        System.out.println("Calyser.StoreReceived");
+        System.out.println("Calyser.StoreSent");
         //
-        String insert = "INSERT INTO "+TABLE_COMMANDS+ "("+ COLUMN_COMMANDS_RECEIVED +")"+
-                " VALUES("+"'"+"TEST"+"'"+")";
+        String insert = "INSERT INTO "+TABLE_COMMANDS+ "("+ COLUMN_COMMANDS_SENT +")"+
+                " VALUES("+"'"+mSent+"'"+")";
         //
-        System.out.println("Calyser.StoreReceived.Insert "+insert);
+        System.out.println("Calyser.StoreSent.Insert "+insert);
         //
         SQLiteDatabase db = this.getWritableDatabase();
         // Insert the new row, returning the primary key value of the new row
         //
-        System.out.println("Store to DB");
+        System.out.println("Calyser.Store to DB");
         //
         db.execSQL(insert);
         db.close();
         //
         System.out.println("Calyser.Message stored in DB");
+        //
+        //DumpDB();
+        //
+    }
+    //
+    public void StoreReceived(String mReceived) {
+        //
+        System.out.println("Calyser.StoreReceived");
+        //
+        String insert = "INSERT INTO "+TABLE_COMMANDS+ "("+ COLUMN_COMMANDS_RECEIVED +")"+
+                " VALUES("+"'"+mReceived+"'"+")";
+        //
+        //System.out.println("Calyser.StoreReceived.Insert "+insert);
+        //
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Insert the new row, returning the primary key value of the new row
+        //
+        //System.out.println("Calyser.Store to DB");
+        //
+        db.execSQL(insert);
+        db.close();
+        //
+        //System.out.println("Calyser.Message stored in DB");
         //
         DumpDB();
         //

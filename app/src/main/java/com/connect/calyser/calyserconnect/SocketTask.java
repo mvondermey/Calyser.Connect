@@ -11,6 +11,8 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.CharsetDecoder;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import credentials.COMMANDS_DBHandler;
 import credentials.DATADBHandler;
@@ -24,6 +26,9 @@ public class SocketTask implements Runnable {
     private final SocketChannel clientSocket;
     private final Context mContext;
     private COMMANDS_DBHandler mCOMMAND_DbHandler;
+    //
+    final static ExecutorService ReadProcessingPool = Executors.newFixedThreadPool(2);
+    final static ExecutorService SendProcessingPool = Executors.newFixedThreadPool(10);
     //
     public SocketTask(SocketChannel oclientSocket, Context oContext) {
         this.clientSocket = oclientSocket;
@@ -40,8 +45,9 @@ public class SocketTask implements Runnable {
         String MessageReceived = "";
         //
         try {
-            //System.out.println("Calyser.ClientTask.Reading data");
+            System.out.println("Calyser.ClientTask.Reading data");
             while (clientSocket.read(bufread) > 0) {
+                System.out.println("Calyser.ClientTask.Reading data.bufread");
                 //System.out.println("Calyser.ClientTask.Data received");
                 bufread.flip();
                 int limit = bufread.limit();
@@ -65,7 +71,7 @@ public class SocketTask implements Runnable {
         //
         // Store Message in DB
         //
-        mCOMMAND_DbHandler.StoreReceived(MessageReceived);
+        //mCOMMAND_DbHandler.StoreReceived(MessageReceived);
         //
         (new MessageParser()).ParseMessage(MessageReceived);
         //
@@ -85,12 +91,18 @@ public class SocketTask implements Runnable {
             e.printStackTrace();
         }
         //
+        // Store Message in DB
+        //
+        //mCOMMAND_DbHandler.StoreSent(message);
+        //
     }
     //
     @Override
     public void run() {
         //
         System.out.println("Calyser.SocketTask.Got connected !");
+        //
+        // Say Hi
         //
         String newData = "Calyser.I-am-CSync-Android\n";
         System.out.println("Message send");
@@ -103,12 +115,9 @@ public class SocketTask implements Runnable {
         SendMessage(myJson.GetJSON());
         //
         while (true) {
-            SendMessage(myJson.GetJSON()+"\n");
-            ReadMessage();
+            System.out.println("********* Calyser.Sending "+myJson.GetJSON());
+            SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
         }
-
         //
-
-
     }
 }
