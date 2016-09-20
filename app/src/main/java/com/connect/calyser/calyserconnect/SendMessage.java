@@ -27,6 +27,10 @@ class SendMessage implements Runnable {
     @Override
     public void run() {
         //
+
+        //
+        System.out.println("********* Calyser.Sending "+message);
+        //
         ByteBuffer bufwrite = ByteBuffer.allocate(1024);
         bufwrite.clear();
         bufwrite.put(message.getBytes());

@@ -6,6 +6,8 @@ import android.telephony.TelephonyManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by martin on 27.03.2016.
  */
@@ -24,6 +26,7 @@ public class MessageJSON {
         //
         JSONObject jsonObj = new JSONObject();
         //
+        String timeStamp = System.currentTimeMillis()+"";
         String ts = Context.TELEPHONY_SERVICE;
         TelephonyManager mTelephonyMgr = (TelephonyManager) mContext.getSystemService(ts);
         String imsi = mTelephonyMgr.getSubscriberId();
@@ -31,6 +34,7 @@ public class MessageJSON {
         String AndroidID = android.provider.Settings.Secure.getString(mContext.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
         //
         try {
+            jsonObj.put("Timestamp",timeStamp);
             jsonObj.put("Message",mMessage);
             jsonObj.put("IMSI",imsi);
             jsonObj.put("IMEI",imei);

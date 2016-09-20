@@ -28,7 +28,7 @@ public class SocketTask implements Runnable {
     private final Context mContext;
     private COMMANDS_DBHandler mCOMMAND_DbHandler;
     //
-    final static ExecutorService ReadProcessingPool = Executors.newFixedThreadPool(2);
+    final static ExecutorService ReadProcessingPool = Executors.newFixedThreadPool(10);
     final static ExecutorService SendProcessingPool = Executors.newFixedThreadPool(10);
     //
     public SocketTask(SocketChannel oclientSocket, Context oContext) {
@@ -50,16 +50,20 @@ public class SocketTask implements Runnable {
         //
         String newData = "Calyser.I-am-CSync-Android\n";
         System.out.println("Message send");
-        SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,newData));
+        new SendMessage(this.clientSocket,this.mContext,newData).run();
+        //
         System.out.println("Message sent");
         //
         MessageJSON myJson = new MessageJSON(mContext,"Here is Android");
-        SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
+        new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()).run();
+        //
+        int count = 0;
         //
         while (true) {
+            count++;
             //System.out.println("********* Calyser.Sending "+myJson.GetJSON());
-            //SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
-            //ReadProcessingPool.submit(new ReadMessage(this.clientSocket,this.mContext));
+            SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
+            ReadProcessingPool.submit(new ReadMessage(this.clientSocket,this.mContext));
         }
         //
     }
