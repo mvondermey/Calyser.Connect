@@ -59,7 +59,7 @@ public class SocketTask implements Runnable {
         //
         int count = 0;
         //
-        while (true) {
+        while (count < 30) {
             count++;
             //System.out.println("********* Calyser.Sending "+myJson.GetJSON());
             SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
