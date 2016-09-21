@@ -37,10 +37,6 @@ public class SocketTask implements Runnable {
         mCOMMAND_DbHandler = new COMMANDS_DBHandler(oContext);
     }
     //
-
-    //
-
-    //
     @Override
     public void run() {
         //
@@ -48,7 +44,7 @@ public class SocketTask implements Runnable {
         //
         // Say Hi
         //
-        String newData = "Calyser.I-am-CSync-Android\n";
+        String newData = "Calyser.I-am-CSync-Android";
         System.out.println("Message send");
         new SendMessage(this.clientSocket,this.mContext,newData).run();
         //
@@ -57,13 +53,20 @@ public class SocketTask implements Runnable {
         MessageJSON myJson = new MessageJSON(mContext,"Here is Android");
         new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()).run();
         //
+        mCOMMAND_DbHandler.WriteOneMessageToSend(myJson.GetJSON());
+        //
         int count = 0;
         //
-        while (count < 30) {
+        // Read DB for data to send
+        //
+        while (true) {
+            //
             count++;
-            //System.out.println("********* Calyser.Sending "+myJson.GetJSON());
-            SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext,myJson.GetJSON()));
+            //
+            String MessageToSend = mCOMMAND_DbHandler.ReadOneMessageToSend();
+            if ( MessageToSend != "" ) SendProcessingPool.submit(new SendMessage(this.clientSocket,this.mContext, MessageToSend));
             ReadProcessingPool.submit(new ReadMessage(this.clientSocket,this.mContext));
+            //
         }
         //
     }

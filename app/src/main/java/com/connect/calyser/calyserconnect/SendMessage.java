@@ -27,7 +27,7 @@ class SendMessage implements Runnable {
     @Override
     public void run() {
         //
-        message += "<EOF>";
+        message = "<BOF>"+message+"<EOF>";
         //
         System.out.println("********* Calyser.Sending "+message);
         //
@@ -37,15 +37,14 @@ class SendMessage implements Runnable {
         bufwrite.flip();
         //
         try {
-            //System.out.println("Calyser.SocketTask.Sending data");
+            //
             while (clientSocket.write(bufwrite)>0);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         //
-        // Store Message in DB
-        //
-        //mCOMMAND_DbHandler.StoreSent(message);
+        mCOMMAND_DbHandler.SetMessageToSent(message);
         //
     }
 }

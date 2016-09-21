@@ -38,8 +38,7 @@ public class ReadMessage implements Runnable {
             try {
                 //System.out.println("Calyser.ClientTask.Reading data");
                 while (clientSocket.read(bufread) > 0) {
-                    //System.out.println("Calyser.ClientTask.Reading data.bufread");
-                    //System.out.println("Calyser.ClientTask.Data received");
+                //
                     bufread.flip();
                     int limit = bufread.limit();
                     System.out.println(" Limit "+limit);
@@ -48,9 +47,6 @@ public class ReadMessage implements Runnable {
                     CharsetDecoder decoder = charset.newDecoder();
                     CharBuffer charBuffer = decoder.decode(bufread);
                     //
-                    System.out.print(" -*- ");
-                    System.out.print(charBuffer.toString());
-                    //
                     MessageReceived += charBuffer.toString();
                     //
                 }
@@ -58,13 +54,15 @@ public class ReadMessage implements Runnable {
                 e.printStackTrace();
             }
             //
-            System.out.print("Message Received = "+MessageReceived);
+            System.out.println("Message Received = "+MessageReceived);
             //
             // Store Message in DB
             //
             //mCOMMAND_DbHandler.StoreReceived(MessageReceived);
             //
             (new MessageParser()).ParseMessage(MessageReceived);
+            //
+
             //
         }
 }
