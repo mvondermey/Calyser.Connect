@@ -1,4 +1,4 @@
-package credentials; /**
+package DBs; /**
  * Created by martin on 15.01.2016.
  */
 import android.content.ContentValues;
@@ -10,7 +10,7 @@ import android.util.Log;
 //
 import java.net.PasswordAuthentication;
 //
-public class DBHandler extends SQLiteOpenHelper {
+public class CREDENTIALS_DBHandler extends SQLiteOpenHelper {
     //
     //DB Username Password
     //
@@ -28,8 +28,8 @@ public class DBHandler extends SQLiteOpenHelper {
     //
 
     //
-    public DBHandler(Context context,
-                     SQLiteDatabase.CursorFactory factory, String DBName, Integer DBVersion, PasswordAuthentication mPasswordAuthentication) {
+    public CREDENTIALS_DBHandler(Context context,
+                                 SQLiteDatabase.CursorFactory factory, String DBName, Integer DBVersion, PasswordAuthentication mPasswordAuthentication) {
         super(context, DBName, factory, DBVersion);
     }
     //

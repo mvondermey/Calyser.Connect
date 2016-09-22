@@ -1,20 +1,14 @@
-package credentials; /**
+package DBs; /**
  * Created by martin on 15.01.2016.
  */
 //
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteCursor;
-import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQuery;
-import android.util.Log;
 
-import java.net.PasswordAuthentication;
 //
-public class DATADBHandler extends SQLiteOpenHelper {
+public class DATA_DBHandler extends SQLiteOpenHelper {
     //
     // DB Data
     //
@@ -27,8 +21,8 @@ public class DATADBHandler extends SQLiteOpenHelper {
     //
     private String [] FileNames;
     //
-    public DATADBHandler(Context context,
-                         SQLiteDatabase.CursorFactory factory, String DBName, Integer DBVersion) {
+    public DATA_DBHandler(Context context,
+                          SQLiteDatabase.CursorFactory factory, String DBName, Integer DBVersion) {
         super(context, DBName, factory, DBVersion);
     //
     }

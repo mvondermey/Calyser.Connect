@@ -3,9 +3,7 @@ package com.connect.calyser.calyserconnect;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -24,7 +22,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,17 +36,11 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.PasswordAuthentication;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-import credentials.DBHandler;
+import DBs.CREDENTIALS_DBHandler;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -80,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private DBHandler mDbHandler;
+    private CREDENTIALS_DBHandler mCREDENTIALSDbHandler;
     private PasswordAuthentication mPasswordAuthentication;
 
     private Dialog mDialog;
@@ -98,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-        mDbHandler = new DBHandler(getApplicationContext(), null, DBHandler.DATABASE_NAME, DBHandler.DATABASE_VERSION, mPasswordAuthentication);
+        mCREDENTIALSDbHandler = new CREDENTIALS_DBHandler(getApplicationContext(), null, CREDENTIALS_DBHandler.DATABASE_NAME, CREDENTIALS_DBHandler.DATABASE_VERSION, mPasswordAuthentication);
         //
         Log.d("Calyser.Connect","OnCreate");
         //
@@ -432,7 +423,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void CreateUser(View mView){
         //
-        mDbHandler.WriteRecord(mPasswordAuthentication);
+        mCREDENTIALSDbHandler.WriteRecord(mPasswordAuthentication);
         //
         mDialog.dismiss();
         //
@@ -462,11 +453,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Integer doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
             //
-            int result = DBHandler.WrongPassword;
+            int result = CREDENTIALS_DBHandler.WrongPassword;
             //
             try {
                 //
-                result = mDbHandler.ResultMatch(mPasswordAuthentication);
+                result = mCREDENTIALSDbHandler.ResultMatch(mPasswordAuthentication);
                 System.out.println("Back in Background");
                 //
             } catch (Exception e) {
@@ -483,15 +474,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             System.out.println("PostExecute success=" + success);
 
-            if (success == DBHandler.PasswordCorrect) {
+            if (success == CREDENTIALS_DBHandler.PasswordCorrect) {
                 //finish();
                 Intent intent = new Intent(LoginActivity.this, Logging.class);
                 //
                 startActivity(intent);
-            } else if ( success == DBHandler.WrongPassword ){
+            } else if ( success == CREDENTIALS_DBHandler.WrongPassword ){
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
-            } else if ( success == DBHandler.UserNameDoesNotExist ) {
+            } else if ( success == CREDENTIALS_DBHandler.UserNameDoesNotExist ) {
                 openDialog();
             }
 

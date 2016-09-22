@@ -9,7 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
-import credentials.COMMANDS_DBHandler;
+import DBs.COMMANDS_DBHandler;
 
 /**
  * Created by martinvondermey on 16.09.2016.

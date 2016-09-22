@@ -1,15 +1,11 @@
-package credentials; /**
+package DBs; /**
  * Created by martin on 15.01.2016.
  */
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import java.net.PasswordAuthentication;
 
 //
 public class COMMANDS_DBHandler extends SQLiteOpenHelper {
@@ -17,7 +13,7 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
     //DB Username Password
     //
     public static final int DATABASE_VERSION = 3;
-    public static final String DATABASE_NAME = "commands5.db";
+    public static final String DATABASE_NAME = "commands6.db";
     public static final String TABLE_COMMANDS = "Commands";
     //
     public static final String COLUMN_ID = "_id";
@@ -58,6 +54,7 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
 
     //
     private void DumpDB() {
+        System.out.println(" Calyser.DUMPDB.Start **************************** ");
         String mQuery = "SELECT * FROM " + TABLE_COMMANDS;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor mCur = db.rawQuery(mQuery, new String[]{});
@@ -67,10 +64,12 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
             String sent = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_SENT));
             String tosend = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_TOSEND));
             String result = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_RESULT));
-            System.out.println(" Received= " + received + " result= " + result + " sent= " + sent);
+            System.out.println(" Received= " + received + " result= " + result + " sent= " + sent + " tosend= "+tosend);
             mCur.moveToNext();
         }
         db.close();
+        //
+        System.out.println(" Calyser.DUMPDB.END **************************** ");
         //
     }
 
@@ -98,6 +97,8 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
     //
     public String ReadOneMessageToSend() {
         //
+        System.out.println("Calyser.ReadOneMessageToSend");
+        //
         String mQuery = "SELECT * FROM " + TABLE_COMMANDS + " WHERE " + COLUMN_COMMANDS_SENT + " IS NULL";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor mCur = db.rawQuery(mQuery, new String[]{});
@@ -107,7 +108,7 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
         String sent = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_SENT));
         String tosend = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_TOSEND));
         String result = mCur.getString(mCur.getColumnIndex(COLUMN_COMMANDS_RESULT));
-        System.out.println(" Received= " + received + " result= " + result + " sent= " + sent);
+        System.out.println(" Received= " + received + " result= " + result + " sent= " + sent+ " tosend= "+tosend);
         //
         db.close();
         //
@@ -116,6 +117,8 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
     }
     //
     public void SetMessageToSent(String message){
+        //
+        //DumpDB();
         //
         String mQuery = " UPDATE " + TABLE_COMMANDS +
                 " SET "  + COLUMN_COMMANDS_SENT + " = " + "'" + message + "'"+
@@ -171,7 +174,7 @@ public class COMMANDS_DBHandler extends SQLiteOpenHelper {
         //
         //System.out.println("Calyser.Message stored in DB");
         //
-        DumpDB();
+        //DumpDB();
         //
     }
     /*  */

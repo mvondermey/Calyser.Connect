@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import credentials.COMMANDS_DBHandler;
+import DBs.COMMANDS_DBHandler;
 
 /**
  * Created by martinvondermey on 16.09.2016.
@@ -27,6 +27,8 @@ class SendMessage implements Runnable {
     @Override
     public void run() {
         //
+        String OrigMessage = message;
+        //
         message = "<BOF>"+message+"<EOF>";
         //
         System.out.println("********* Calyser.Sending "+message);
@@ -44,7 +46,8 @@ class SendMessage implements Runnable {
             return;
         }
         //
-        mCOMMAND_DbHandler.SetMessageToSent(message);
+        System.out.println("Sent message");
+        mCOMMAND_DbHandler.SetMessageToSent(OrigMessage);
         //
     }
 }

@@ -1,8 +1,5 @@
 package com.connect.calyser.calyserconnect;
 
-import android.app.ListActivity;
-import android.app.ListFragment;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,16 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import credentials.DATADBHandler;
+import DBs.DATA_DBHandler;
 
 
 public class FileListActivity extends AppCompatActivity {
@@ -32,7 +27,7 @@ public class FileListActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-    private DATADBHandler mDbHandler;
+    private DATA_DBHandler mDbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +36,7 @@ public class FileListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //
-        mDbHandler = new DATADBHandler(getApplicationContext(), null, DATADBHandler.DATA_DATABASE_NAME, DATADBHandler.DATA_DATABASE_VERSION);
+        mDbHandler = new DATA_DBHandler(getApplicationContext(), null, DATA_DBHandler.DATA_DATABASE_NAME, DATA_DBHandler.DATA_DATABASE_VERSION);
         //
         String[] values = GetFileNames();
         //
@@ -139,7 +134,7 @@ public class FileListActivity extends AppCompatActivity {
         //
         String[] values = new String[]{"Test","Martin"};
         //
-        System.out.println("DBHandler "+mDbHandler);
+        System.out.println("CREDENTIALS_DBHandler "+mDbHandler);
         //
         //values = mDbHandler.GetDBFileNames();
         //
