@@ -60,7 +60,7 @@ public class Server extends AppCompatActivity {
                 try {
                     //
                     ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-
+                    //
                     serverSocketChannel.socket().bind(new InetSocketAddress(port));
                     //
 
@@ -79,7 +79,7 @@ public class Server extends AppCompatActivity {
                         //
                         if (clientSocket != null) {
                             System.out.println("Calyser.Server.Got Connection");
-                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket, mContext));
+                            SingletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket, mContext));
                             System.out.println("Calyser.Server.Continue Loop");
                         }
                         //

@@ -9,19 +9,19 @@ import java.util.concurrent.Executors;
 /**
  * Created by martin on 21.01.2016.
  */
-public class SIngletonCalyser {
+public class SingletonCalyser {
 
     private static ArrayList mSListPorts = new ArrayList<Integer>();
 
     private static ArrayList<Pair<String,Integer>> mSListConnections = new ArrayList<Pair<String,Integer>>();
 
-    private static SIngletonCalyser ourInstance = new SIngletonCalyser();
+    private static SingletonCalyser ourInstance = new SingletonCalyser();
 
-    public static SIngletonCalyser getInstance() {
+    public static SingletonCalyser getInstance() {
         return ourInstance;
     }
 
-    private SIngletonCalyser() {
+    private SingletonCalyser() {
         //empty
     }
 

@@ -36,7 +36,7 @@ public class Client {
     //
     public void startClient(final Context mContext) {
         //
-        final ArrayList mListConnections =  SIngletonCalyser.getConnections();
+        final ArrayList mListConnections =  SingletonCalyser.getConnections();
         final WebSocketClient[] mWebSocketClient = {null};
         //
 
@@ -87,7 +87,7 @@ public class Client {
                             //
                             System.out.println("Calyser.Client.Submit pool");
                             //
-                            SIngletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket,mContext));
+                            SingletonCalyser.SocketProcessingPool.submit(new SocketTask(clientSocket,mContext));
                             //
                         } catch (IOException e ) {
                             System.out.println("Calyser.Client.Unable to open socket "+ip+" "+port);

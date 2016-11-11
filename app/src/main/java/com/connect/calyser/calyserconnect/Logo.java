@@ -26,10 +26,10 @@ public class Logo extends AppCompatActivity {
         ImageView image = (ImageView) findViewById(R.id.logo);
         image.setImageResource(R.mipmap.ic_launcher);
         //
-        SIngletonCalyser.addPort(5000);
-        SIngletonCalyser.addPort(5001);
+        SingletonCalyser.addPort(5000);
+        SingletonCalyser.addPort(5001);
         //
-        SIngletonCalyser.addConnections("10.0.2.2",8081);
+        SingletonCalyser.addConnections("10.0.2.2",8081);
         /*
         mClient = new Client();
         mClient.startClient(this);

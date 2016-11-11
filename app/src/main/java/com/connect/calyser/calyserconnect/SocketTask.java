@@ -56,7 +56,10 @@ public class SocketTask implements Runnable {
                 if (MessageToSend != "" )
                     SendProcessingPool.submit(new SendMessage(this.clientSocket, this.mContext, MessageToSend));
             }
-            //ReadProcessingPool.submit(new ReadMessage(this.clientSocket,this.mContext));
+            //
+            // Read Message
+            //
+            ReadProcessingPool.submit(new ReadMessage(this.clientSocket,this.mContext));
             //
         }
         //

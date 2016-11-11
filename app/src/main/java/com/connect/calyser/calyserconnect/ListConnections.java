@@ -181,7 +181,7 @@ public class ListConnections extends AppCompatActivity {
     //
     public void AddConnection(String IPadress){
         //
-        SIngletonCalyser.addConnections(IPadress,8001);
+        SingletonCalyser.addConnections(IPadress,8001);
         //
         mDialog.dismiss();
         UpdateUI();
@@ -211,7 +211,7 @@ public class ListConnections extends AppCompatActivity {
         //SIngletonCalyser.addConnections("192.168.1.23", 8001);
         //SIngletonCalyser.addConnections("192.168.2.23", 8001);
         //
-        final ArrayList mListConnections = SIngletonCalyser.getConnections();
+        final ArrayList mListConnections = SingletonCalyser.getConnections();
         //
         Iterator itr = mListConnections.iterator();
         while (itr.hasNext()) {

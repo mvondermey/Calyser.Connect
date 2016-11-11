@@ -26,7 +26,7 @@ public class MessageParser {
             //
             JSONObject reader = new JSONObject(MessageToParse);
             String Command = reader.getString("Command");
-            System.out.println(" Command = "+Command);
+            System.out.println(" Command Extracted= "+Command);
             //
             System.out.println((new CommandParser()).ParseCommand(Command));
             //
